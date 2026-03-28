@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SteamBox – Game Manifest Generator</title>
+  <meta name="description" content="SteamBox é o gerador de manifests e scripts Lua para Steam mais rápido e moderno. Pesquise jogos, baixe manifests e configure seu Steam em segundos." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Animated Background -->
+  <div class="bg-scene">
+    <div class="stars" id="stars"></div>
+    <div class="nebula nebula-1"></div>
+    <div class="nebula nebula-2"></div>
+    <div class="nebula nebula-3"></div>
+    <div class="grid-lines"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="header" id="header">
+    <div class="header-inner">
+      <a href="#" class="logo" id="logo-link">
+        <div class="logo-icon">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="14" cy="14" r="13" stroke="url(#logoGrad)" stroke-width="2"/>
+            <path d="M8 14L14 8L20 14L14 20L8 14Z" fill="url(#logoGrad)"/>
+            <circle cx="14" cy="14" r="3" fill="#fff"/>
+            <defs>
+              <linearGradient id="logoGrad" x1="0" y1="0" x2="28" y2="28" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#7c3aed"/>
+                <stop offset="1" stop-color="#06b6d4"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <span class="logo-text">Steam<span class="logo-accent">Box</span></span>
+      </a>
+
+      <nav class="nav" id="main-nav">
+        <a href="#search-section" class="nav-link" id="nav-search">Buscar Jogos</a>
+        <a href="#how-it-works" class="nav-link" id="nav-howto">Como Usar</a>
+        <a href="#about" class="nav-link" id="nav-about">Sobre</a>
+      </nav>
+
+      <div class="header-actions">
+        <div class="status-badge" id="status-badge">
+          <span class="status-dot"></span>
+          <span>Online</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <div class="hero-badge" id="hero-badge">
+        <span class="badge-icon">⚡</span>
+        <span>Gerador de Manifests para Steam</span>
+      </div>
+      <h1 class="hero-title" id="hero-title">
+        Desbloqueie seus<br/>
+        <span class="gradient-text">Jogos Steam</span><br/>
+        em segundos
+      </h1>
+      <p class="hero-subtitle" id="hero-subtitle">
+        Pesquise qualquer jogo, baixe manifests e scripts Lua automaticamente.<br/>
+        Compatível com todas as versões do Steam.
+      </p>
+      <div class="hero-cta" id="hero-cta">
+        <a href="#search-section" class="btn btn-primary" id="cta-search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          Buscar Jogos
+        </a>
+        <a href="#how-it-works" class="btn btn-ghost" id="cta-howto">
+          Como Funciona
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+      <div class="hero-stats" id="hero-stats">
+        <div class="stat">
+          <span class="stat-num" id="stat-games">∞</span>
+          <span class="stat-label">Jogos</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num">2</span>
+          <span class="stat-label">Formatos</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num">24/7</span>
+          <span class="stat-label">Online</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual" id="hero-visual">
+      <div class="game-card-preview">
+        <div class="preview-header">
+          <div class="preview-dots">
+            <span></span><span></span><span></span>
+          </div>
+          <span class="preview-title">SteamBox v2.0</span>
+        </div>
+        <div class="preview-search">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <span class="preview-placeholder">black myth wukong...</span>
+        </div>
+        <div class="preview-results">
+          <div class="preview-item active">
+            <div class="preview-img" style="background: linear-gradient(135deg,#1a1a2e,#16213e)"></div>
+            <div class="preview-info">
+              <span class="preview-appid">2358720</span>
+              <span class="preview-name">Black Myth: Wukong</span>
+            </div>
+            <div class="preview-badge">✓</div>
+          </div>
+          <div class="preview-item">
+            <div class="preview-img" style="background: linear-gradient(135deg,#0f3460,#533483)"></div>
+            <div class="preview-info">
+              <span class="preview-appid">730</span>
+              <span class="preview-name">Counter-Strike 2</span>
+            </div>
+          </div>
+          <div class="preview-item">
+            <div class="preview-img" style="background: linear-gradient(135deg,#1b1b2f,#2e4057)"></div>
+            <div class="preview-info">
+              <span class="preview-appid">570</span>
+              <span class="preview-name">Dota 2</span>
+            </div>
+          </div>
+        </div>
+        <div class="preview-actions">
+          <div class="preview-btn manifest">📦 Manifest</div>
+          <div class="preview-btn lua">🔧 Lua</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Search Section -->
+  <section class="search-section" id="search-section">
+    <div class="section-container">
+      <div class="section-header">
+        <h2 class="section-title">Buscar Jogos</h2>
+        <p class="section-subtitle">Digite o nome do jogo ou o AppID do Steam</p>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="search-wrapper" id="search-wrapper">
+        <div class="search-box" id="search-box">
+          <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input
+            type="text"
+            id="search-input"
+            class="search-input"
+            placeholder="Nome do jogo ou AppID…"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <button class="search-clear" id="search-clear" title="Limpar">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <button class="btn btn-primary search-btn" id="search-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          Buscar
+        </button>
+      </div>
+
+      <!-- Download Type Tabs -->
+      <div class="tabs-wrapper" id="tabs-wrapper">
+        <div class="tabs" id="download-tabs" role="tablist">
+          <button class="tab active" id="tab-manifest" role="tab" data-type="manifest">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Manifest
+            <span class="tab-path">.manifest → depotcache</span>
+          </button>
+          <button class="tab" id="tab-lua" role="tab" data-type="lua">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            Lua Script
+            <span class="tab-path">.lua → stplug-in</span>
+          </button>
+        </div>
+        <div class="path-info" id="path-info">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          <span id="path-display">C:\Program Files (x86)\Steam\depotcache</span>
+        </div>
+      </div>
+
+      <!-- Results Grid -->
+      <div class="results-area" id="results-area">
+        <!-- Empty State -->
+        <div class="empty-state" id="empty-state">
+          <div class="empty-icon">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          </div>
+          <h3>Nenhum download ainda</h3>
+          <p>Pesquise um jogo acima para começar</p>
+        </div>
+
+        <!-- Loading State -->
+        <div class="loading-state hidden" id="loading-state">
+          <div class="loader-ring"></div>
+          <p>Buscando jogos...</p>
+        </div>
+
+        <!-- Error State -->
+        <div class="error-state hidden" id="error-state">
+          <div class="error-icon">⚠️</div>
+          <h3 id="error-title">Erro ao buscar</h3>
+          <p id="error-msg">Verifique sua conexão e tente novamente.</p>
+          <button class="btn btn-ghost" id="retry-btn">Tentar Novamente</button>
+        </div>
+
+        <!-- Results Grid -->
+        <div class="results-grid hidden" id="results-grid"></div>
+
+        <!-- Pagination -->
+        <div class="pagination hidden" id="pagination">
+          <button class="page-btn" id="prev-page" disabled>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <div class="page-numbers" id="page-numbers"></div>
+          <button class="page-btn" id="next-page">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+          <div class="per-page-select">
+            <label for="per-page">Por página:</label>
+            <select id="per-page">
+              <option value="10" selected>10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="how-it-works" id="how-it-works">
+    <div class="section-container">
+      <div class="section-header">
+        <h2 class="section-title">Como Usar</h2>
+        <p class="section-subtitle">Três passos simples para configurar seu Steam</p>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card" id="step-1">
+          <div class="step-number">01</div>
+          <div class="step-icon">🔍</div>
+          <h3>Busque o Jogo</h3>
+          <p>Digite o nome do jogo ou AppID do Steam na barra de busca e selecione o resultado correto.</p>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step-card" id="step-2">
+          <div class="step-number">02</div>
+          <div class="step-icon">⬇️</div>
+          <h3>Baixe os Arquivos</h3>
+          <p>Escolha entre Manifest ou Lua e clique em download. Os arquivos serão baixados automaticamente.</p>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step-card" id="step-3">
+          <div class="step-number">03</div>
+          <div class="step-icon">🎮</div>
+          <h3>Pronto para Jogar</h3>
+          <p>O app registra o jogo no Steam e abre o instalador automaticamente. Sem mover pastas!</p>
+        </div>
+      </div>
+      <div class="paths-info" id="paths-info">
+        <div class="path-card" id="path-manifest">
+          <div class="path-icon">📦</div>
+          <div class="path-content">
+            <span class="path-label">Manifest Files</span>
+            <code class="path-value">C:\Program Files (x86)\Steam\depotcache</code>
+          </div>
+          <button class="copy-btn" data-copy="C:\Program Files (x86)\Steam\depotcache" title="Copiar caminho">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          </button>
+        </div>
+        <div class="path-card" id="path-lua">
+          <div class="path-icon">🔧</div>
+          <div class="path-content">
+            <span class="path-label">Lua Scripts</span>
+            <code class="path-value">C:\Program Files (x86)\Steam\config\stplug-in</code>
+          </div>
+          <button class="copy-btn" data-copy="C:\Program Files (x86)\Steam\config\stplug-in" title="Copiar caminho">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="about" id="about">
+    <div class="section-container">
+      <div class="about-grid">
+        <div class="about-content">
+          <h2 class="section-title">Sobre o SteamBox</h2>
+          <p>SteamBox é uma ferramenta de manifest generator para Steam desenvolvida com tecnologia avançada de API. Permite buscar, baixar e configurar manifests e scripts Lua para qualquer jogo Steam de forma rápida e eficiente.</p>
+          <div class="about-features">
+            <div class="feature">
+              <span class="feature-icon">⚡</span>
+              <span>Download instantâneo</span>
+            </div>
+            <div class="feature">
+              <span class="feature-icon">🛡️</span>
+              <span>API segura e autenticada</span>
+            </div>
+            <div class="feature">
+              <span class="feature-icon">🔄</span>
+              <span>Atualização automática</span>
+            </div>
+            <div class="feature">
+              <span class="feature-icon">🎮</span>
+              <span>Todos os jogos Steam</span>
+            </div>
+          </div>
+        </div>
+        <div class="about-visual">
+          <div class="api-card" id="api-card">
+            <div class="api-card-header">
+              <span class="api-dot dot-manifest"></span>
+              <span>API Status</span>
+            </div>
+            <div class="api-endpoint">
+              <span class="endpoint-method">GET</span>
+              <span class="endpoint-path">/secure_download</span>
+              <span class="endpoint-status online">● Online</span>
+            </div>
+            <div class="api-endpoint">
+              <span class="endpoint-method">GET</span>
+              <span class="endpoint-path">/resellerlua</span>
+              <span class="endpoint-status online">● Online</span>
+            </div>
+            <div class="api-endpoint">
+              <span class="endpoint-method">GET</span>
+              <span class="endpoint-path">/resellerrequest</span>
+              <span class="endpoint-status online">● Online</span>
+            </div>
+            <div class="api-endpoint">
+              <span class="endpoint-method">GET</span>
+              <span class="endpoint-path">/resellerupdate</span>
+              <span class="endpoint-status online">● Online</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer" id="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <svg width="20" height="20" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="14" cy="14" r="13" stroke="url(#footerGrad)" stroke-width="2"/>
+          <path d="M8 14L14 8L20 14L14 20L8 14Z" fill="url(#footerGrad)"/>
+          <circle cx="14" cy="14" r="3" fill="#fff"/>
+          <defs>
+            <linearGradient id="footerGrad" x1="0" y1="0" x2="28" y2="28">
+              <stop stop-color="#7c3aed"/>
+              <stop offset="1" stop-color="#06b6d4"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <span>Steam<strong>Box</strong></span>
+      </div>
+      <p class="footer-copy">© 2026 SteamBox — Todos os direitos reservados. Desenvolvido por <strong>Presley G Silva</strong></p>
+      <p class="footer-disclaimer">SteamBox é uma ferramenta de terceiros e não é afiliada à Valve Corporation ou Steam.</p>
+    </div>
+  </footer>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Game Detail Modal -->
+  <div class="modal-overlay hidden" id="modal-overlay">
+    <div class="modal" id="game-modal" role="dialog" aria-modal="true">
+      <button class="modal-close" id="modal-close" aria-label="Fechar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+
+      <!-- Modal Status Overlay -->
+      <div class="modal-status-overlay" id="modal-status-overlay">
+        <div class="status-title">Automatizando...</div>
+        <div class="status-steps" id="modal-status-steps">
+          <!-- Steps will be dynamically injected or reuse card logic -->
+          <div class="status-step" id="modal-step-update">
+            <div class="status-step-icon"><div class="status-step-dot"></div></div>
+            <span>Atualizando API Ryuu</span>
+          </div>
+          <div class="status-step" id="modal-step-download">
+            <div class="status-step-icon"><div class="status-step-dot"></div></div>
+            <span>Baixando Manifest e Lua</span>
+          </div>
+          <div class="status-step" id="modal-step-acf">
+            <div class="status-step-icon"><div class="status-step-dot"></div></div>
+            <span>Gerando Registro ACF</span>
+          </div>
+          <div class="status-step" id="modal-step-steam">
+            <div class="status-step-icon"><div class="status-step-dot"></div></div>
+            <span>Iniciando Download no Steam</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-hero" id="modal-hero">
+        <img id="modal-img" src="" alt="" />
+        <div class="modal-hero-overlay"></div>
+      </div>
+      <div class="modal-body">
+        <div class="modal-meta">
+          <span class="modal-appid" id="modal-appid"></span>
+          <span class="modal-status" id="modal-status"></span>
+        </div>
+        <h2 class="modal-title" id="modal-title"></h2>
+        <div class="modal-actions">
+          <button class="btn btn-primary" id="modal-dl-game">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Baixar para Steam
+          </button>
+          <button class="btn btn-outline" id="modal-update">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            Atualizar
+          </button>
+        </div>
+        <div class="modal-path-info">
+          <div class="modal-path">
+            <span class="modal-path-icon">📦</span>
+            <div>
+              <span class="modal-path-label">Manifest → </span>
+              <code>C:\Program Files (x86)\Steam\depotcache</code>
+            </div>
+          </div>
+          <div class="modal-path">
+            <span class="modal-path-icon">🔧</span>
+            <div>
+              <span class="modal-path-label">Lua → </span>
+              <code>C:\Program Files (x86)\Steam\config\stplug-in</code>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

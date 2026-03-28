@@ -1,0 +1,19 @@
+node_modules
+dist
+dist-ssr
+*.local
+
+# Tauri / Rust
+src-tauri/target
+src-tauri/bin
+
+# IDEs
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
