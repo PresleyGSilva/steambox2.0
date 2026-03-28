@@ -49,23 +49,49 @@ async fn get_steam_paths() -> Result<SteamPaths, String> {
 }
 
 #[tauri::command]
-async fn download_and_save(url: String, path: String, filename: String) -> Result<String, String> {
+async fn download_and_save(url: String, path: String, mut filename: String) -> Result<String, String> {
     let target_dir = Path::new(&path);
-    let target_file = target_dir.join(&filename);
-
+    
     // Create directory if it doesn't exist
     if !target_dir.exists() {
         fs::create_dir_all(target_dir).map_err(|e| format!("Erro ao criar diretório: {}", e))?;
     }
 
+    // Use a real browser User-Agent
+    let client = reqwest::Client::builder()
+        .user_agent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+        .build()
+        .map_err(|e| format!("Erro ao criar cliente: {}", e))?;
+
     // Download content
-    let response = reqwest::get(url).await.map_err(|e| format!("Erro no download: {}", e))?;
+    let response = client.get(url).send().await.map_err(|e| format!("Erro no download: {}", e))?;
+    
+    // Try to get filename from Content-Disposition header
+    if let Some(cd) = response.headers().get(reqwest::header::CONTENT_DISPOSITION) {
+        if let Ok(cd_str) = cd.to_str() {
+            // Very simple parser for "filename=..."
+            if let Some(pos) = cd_str.find("filename=") {
+                let mut name = &cd_str[pos + 9..];
+                // Remove quotes if present
+                if name.starts_with('"') {
+                    name = &name[1..name.len() - 1];
+                }
+                // Stop at first semicolon or end of string
+                if let Some(end) = name.find(';') {
+                    name = &name[..end];
+                }
+                filename = name.to_string();
+            }
+        }
+    }
+
+    let target_file = target_dir.join(&filename);
     let bytes = response.bytes().await.map_err(|e| format!("Erro ao ler bytes: {}", e))?;
 
     // Save to disk
     fs::write(&target_file, bytes).map_err(|e| format!("Erro ao salvar arquivo: {}", e))?;
 
-    Ok(format!("Arquivo salvo com sucesso em: {}", target_file.display()))
+    Ok(filename) // Return the final filename used
 }
 
 #[tauri::command]

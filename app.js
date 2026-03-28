@@ -47,6 +47,7 @@ let state = {
   totalPages: 1,
   loading: false,
   selectedGame: null,
+  history: [],
 };
 
 // ---- ELEMENTS ----
@@ -267,40 +268,44 @@ async function searchViaRyuuAPI(query) {
 async function downloadManifest(appid, gameName) {
   const url = API.manifest(appid);
   if (window.__TAURI__) {
-    showToast(`Baixando manifest de ${gameName} para Steam...`, 'download', 5000);
+    showToast(`Baixando manifest de ${gameName}...`, 'download', 5000);
     try {
-      await window.__TAURI__.core.invoke('download_and_save', {
+      const filename = await window.__TAURI__.core.invoke('download_and_save', {
         url,
         path: PATHS.manifest,
-        filename: `${appid}.manifest`
+        filename: `${appid}.manifest` // Fallback if header fails
       });
-      showToast('Manifest salvo com sucesso!', 'success');
+      return filename;
     } catch (err) {
       showToast(`Erro ao salvar: ${err}`, 'error');
+      throw err;
     }
   } else {
     showToast(`Baixando manifest de ${gameName}...`, 'download', 5000);
     triggerDownload(url, `${appid}.manifest`);
+    return `${appid}.manifest`;
   }
 }
 
 async function downloadLua(appid, gameName) {
   const url = API.lua(appid);
   if (window.__TAURI__) {
-    showToast(`Baixando Lua de ${gameName} para Steam...`, 'download', 5000);
+    showToast(`Baixando Lua de ${gameName}...`, 'download', 5000);
     try {
-      await window.__TAURI__.core.invoke('download_and_save', {
+      const filename = await window.__TAURI__.core.invoke('download_and_save', {
         url,
         path: PATHS.lua,
         filename: `${appid}.lua`
       });
-      showToast('Script Lua salvo com sucesso!', 'success');
+      return filename;
     } catch (err) {
       showToast(`Erro ao salvar: ${err}`, 'error');
+      throw err;
     }
   } else {
     showToast(`Baixando Lua script de ${gameName}...`, 'download', 5000);
     triggerDownload(url, `${appid}.lua`);
+    return `${appid}.lua`;
   }
 }
 
@@ -504,7 +509,7 @@ function createGameCard(game) {
       
       // 2. Download files
       setStepState(appid, 'download', 'active');
-      await Promise.all([
+      const [manifestFile, luaFile] = await Promise.all([
         downloadManifest(appid, name),
         downloadLua(appid, name),
       ]);
@@ -522,6 +527,16 @@ function createGameCard(game) {
       
       showToast('Pronto! Verifique seu Steam.', 'success');
       setTimeout(() => card.classList.remove('processing'), 2000);
+
+      // Render Result Card (Foto 3 style)
+      renderDownloadResult({
+        appid,
+        name,
+        manifestFile,
+        luaFile,
+        date: new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })
+      });
+
     } catch (err) {
       showToast('Ocorreu um erro no processo.', 'error');
       card.classList.remove('processing');
@@ -663,7 +678,103 @@ function setState(s) {
   if (s === 'empty')   els.emptyState.classList.remove('hidden');
   if (s === 'loading') els.loadingState.classList.remove('hidden');
   if (s === 'error')   els.errorState.classList.remove('hidden');
-  if (s === 'results') els.resultsGrid.classList.remove('hidden');
+  if (s === 'results') {
+    els.resultsGrid.classList.remove('hidden');
+    document.getElementById('success-area').classList.add('hidden');
+  }
+  if (s === 'success') {
+    document.getElementById('success-area').classList.remove('hidden');
+    els.resultsGrid.classList.add('hidden');
+    els.pagination.classList.add('hidden');
+  }
+}
+
+function renderDownloadResult(result) {
+  const container = document.getElementById('success-area');
+  const imgUrl = STEAM_IMG(result.appid);
+  
+  container.innerHTML = `
+    <div class="result-card">
+      <div class="result-header">
+        <div class="result-img-wrapper">
+          <img src="${imgUrl}" class="result-img" onerror="this.src=''; this.style.display='none'" />
+        </div>
+        <div class="result-info">
+          <h2 class="result-game-name">${escapeHtml(result.name)}</h2>
+          <div class="result-meta">
+            <span class="result-appid">${result.appid}</span>
+            <span class="result-type">JOGO</span>
+            <span style="opacity: 0.3">·</span>
+            <span style="color: var(--text-muted); font-size: 0.7rem">Última atualização ${result.date}</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="result-stats-bar">
+        <div class="stat-item"><span class="stat-dot dot-lua"></span> Lua (1)</div>
+        <div class="stat-item"><span class="stat-dot dot-manifest"></span> Manifest (1)</div>
+        <div class="stat-item"><span class="stat-dot dot-total"></span> Total (2)</div>
+      </div>
+      
+      <div class="result-content">
+        <div class="result-msg">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+          Mostrando arquivos - 2 arquivos incluídos no download
+        </div>
+        
+        <div class="file-list">
+          <div class="file-item">
+            <svg class="file-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <span class="file-name">${result.luaFile}</span>
+            <span class="file-type-tag">LUA SCRIPT</span>
+          </div>
+          <div class="file-item">
+            <svg class="file-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <span class="file-name">${result.manifestFile}</span>
+            <span class="file-type-tag">MANIFEST</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  setState('success');
+  updateHistory(result);
+}
+
+function updateHistory(result) {
+  // Add to start of history
+  state.history.unshift(result);
+  // Keep only last 10
+  if (state.history.length > 10) state.history.pop();
+  renderHistory();
+}
+
+function renderHistory() {
+  const section = document.getElementById('history-section');
+  const grid = document.getElementById('history-grid');
+  
+  if (state.history.length === 0) {
+    section.classList.add('hidden');
+    return;
+  }
+  
+  section.classList.remove('hidden');
+  grid.innerHTML = '';
+  
+  state.history.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'history-card';
+    card.innerHTML = `
+      <img src="${STEAM_IMG(item.appid)}" class="history-img" onerror="this.src=''; this.style.display='none'" />
+      <div class="history-info">
+        <div class="history-name">${escapeHtml(item.name)}</div>
+        <div class="history-date">${item.date}</div>
+      </div>
+      <div class="history-files">2 FILE(S)</div>
+    `;
+    grid.appendChild(card);
+  });
 }
 
 function showLoading() { setState('loading'); }
