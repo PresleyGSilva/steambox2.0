@@ -5,8 +5,9 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tauri dev",
-    "build": "tauri build"
+    "build:frontend": "node build-frontend.js",
+    "dev": "npm run build:frontend && tauri dev",
+    "build": "npm run build:frontend && tauri build"
   },
   "repository": {
     "type": "git",

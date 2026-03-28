@@ -4,6 +4,8 @@
   "version": "0.1.0",
   "identifier": "com.steambox.client",
   "build": {
+    "beforeDevCommand": "npm run build:frontend",
+    "beforeBuildCommand": "npm run build:frontend",
     "frontendDist": "../dist"
   },
   "app": {
